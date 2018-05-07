@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>lt.lb</groupId>
+    <artifactId>PongNEAT</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    
+    
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+    
+    
+    
+    <dependencies>
+        
+        <dependency>
+            <groupId>com.github.laim0nas100</groupId>
+            <artifactId>Commons</artifactId>
+            <version>0.2</version>
+        </dependency>
+<!--        <dependency>
+            <groupId>com.github.laim0nas100</groupId>
+            <artifactId>NeurEvol</artifactId>
+            <version>ca94e4c9220c457dde42ff3fff7005ed7c1a619a</version>
+        </dependency>-->
+        <dependency>
+            <groupId>lt.lb</groupId>
+            <artifactId>NeurEvol</artifactId>
+            <version>local-jar</version>
+        </dependency>
+    </dependencies>
+</project>
