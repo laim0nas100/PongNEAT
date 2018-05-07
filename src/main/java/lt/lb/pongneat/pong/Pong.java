@@ -15,8 +15,8 @@ public class Pong extends JFrame {
 
     public PongEngine gameEngine;
 
-    static int height = 600;
-    static int width = 800;
+    public static final int height = 600;
+    public static final int width = 800;
 
     public Pong(boolean init) {
 

@@ -66,14 +66,7 @@ public class PongController {
         return list;
     }
 
-    public void evaluateFitness() {
-        int i = 0;
-        for (Genome g : this.getGenomes()) {
-//            this.evaluate(g, i++);
-        }
-    }
-
-    private void evaluatePair() {
+    public void evaluatePair() {
         Paddle p1 = this.getEngine().paddles.get(0);
         Paddle p2 = this.getEngine().paddles.get(1);
 
@@ -112,6 +105,102 @@ public class PongController {
     }
 
     public void advanceFrame() {
+
+        Paddle paddle1 = this.getEngine().paddles.get(0);
+        Paddle paddle2 = this.getEngine().paddles.get(1);
+
+        Double[] ap = new Double[2 + this.getEngine().balls.size() * 2];
+        Double[] bp = new Double[ap.length];
+
+        double ax = paddle1.y / Pong.height;
+        double bx = paddle2.y / Pong.height;
+
+        ArrayList<Pair<Double>> ballCoords = new ArrayList<>();
+        for (Ball ball : this.getEngine().balls) {
+            ballCoords.add(new Pair(ball.x / Pong.width, ball.y / Pong.height));
+        }
+
+        //A perspective
+        ap[0] = ax;
+        ap[1] = bx;
+
+        bp[0] = bx;
+        bp[1] = ax;
+
+        int i = 2;
+        for (Pair<Double> pair : ballCoords) {
+            double x = pair.g1;
+            double y = pair.g2;
+
+            ap[i] = x;
+            ap[i + 1] = y;
+            bp[i] = x;
+            bp[i + 1] = y;
+            i += 2;
+        }
+
+        Double[] g1Eval = this.genomes.g1.evaluate(ap);
+        Double[] g2Eval = this.genomes.g2.evaluate(bp);
+
+        PongMove moveA = this.decideMove(g1Eval);
+        if (moveA == PongMove.UP) {
+            this.getEngine().moveA(-5);
+
+        } else if (moveA == PongMove.DOWN) {
+            this.getEngine().moveA(5);
+        }
+
+        PongMove moveB = this.decideMove(g2Eval);
+        if (moveB == PongMove.UP) {
+            this.getEngine().moveB(-5);
+
+        } else if (moveB == PongMove.DOWN) {
+            this.getEngine().moveB(5);
+        }
+
+        if (this.getEngine().running) {
+            this.getEngine().updateGame();
+        }
+
+//my Y
+        //enemy Y
+        //ball 1 y
+        //ball 1 x
+        //ball 2 y
+        //ball 2 x
+        //ball n y
+        //ball n x
+        //moves nothing, left, right
+        {
+
+        }
+    }
+
+    public static enum PongMove {
+        UP, DOWN, STAY
+    }
+
+    private PongMove decideMove(Double[] eval) {
+
+        Double max = eval[0];
+        int index = 0;
+        for (int i = 1; i < eval.length; i++) {
+            if (max < eval[i]) {
+                max = eval[i];
+                index = i;
+            }
+        }
+
+        switch (index) {
+            case 0:
+                return PongMove.UP;
+            case 2:
+                return PongMove.DOWN;
+            default:
+                return PongMove.STAY;
+
+        }
+
     }
 
 //    public void makeMove() {
