@@ -5,6 +5,8 @@
  */
 package lt.lb.pongneat;
 
+import lt.lb.pongneat.controllers.PongControllerCompetitive;
+import lt.lb.pongneat.controllers.PongControllerBase;
 import java.util.*;
 import lt.lb.commons.Containers.Value;
 import lt.lb.commons.Threads.Promise;

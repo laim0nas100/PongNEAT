@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.lb.pongneat;
+package lt.lb.pongneat.controllers;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ public abstract class PongControllerBase {
 
     long frame = 0;
 
-    int totalScore;
+    public int totalScore;
 
     public static Map<String, PongFitnessBase> fitnessMap = new ConcurrentHashMap<>();
 

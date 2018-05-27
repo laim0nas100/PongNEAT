@@ -28,7 +28,7 @@
             <version>2.8.4</version>
         </dependency>
 
-<!--        <dependency>
+        <dependency>
             <groupId>lt.lb</groupId>
             <artifactId>NeurEvol</artifactId>
             <version>local-jar</version>
@@ -37,9 +37,9 @@
             <groupId>lt.lb</groupId>
             <artifactId>Commons</artifactId>
             <version>local-jar</version>
-        </dependency>-->
+        </dependency>
         
-        <dependency>
+<!--        <dependency>
             <groupId>com.github.laim0nas100</groupId>
             <artifactId>Commons</artifactId>
             <version>0.4</version>
@@ -49,7 +49,7 @@
             <groupId>com.github.laim0nas100</groupId>
             <artifactId>NeurEvol</artifactId>
             <version>0.3</version>
-        </dependency>
+        </dependency>-->
         
         <dependency>
             <groupId>junit</groupId>

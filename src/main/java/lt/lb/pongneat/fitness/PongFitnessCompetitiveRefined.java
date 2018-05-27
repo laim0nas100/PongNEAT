@@ -6,7 +6,7 @@
 package lt.lb.pongneat.fitness;
 
 import lt.lb.neurevol.Evoliution.NEAT.interfaces.Fitness;
-import lt.lb.pongneat.PongControllerBase;
+import lt.lb.pongneat.controllers.PongControllerBase;
 
 /**
  *

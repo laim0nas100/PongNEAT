@@ -23,11 +23,12 @@ import lt.lb.commons.Log;
 import lt.lb.commons.Threads.*;
 import lt.lb.neurevol.Evoliution.Control.Config;
 import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.HyperGenome;
-import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.HyperNEATSpace;
+import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.HyperSpace;
 import lt.lb.neurevol.Evoliution.NEAT.*;
 import lt.lb.neurevol.Evoliution.NEAT.imp.*;
 import lt.lb.neurevol.Evoliution.NEAT.interfaces.*;
 import lt.lb.neurevol.Misc.F;
+import lt.lb.pongneat.controllers.PongControllerBase;
 
 /**
  * FXML Controller class
@@ -79,7 +80,7 @@ public class PongNeatController implements BaseController {
 
     public Gson g = new Gson();
     public int[] dim = new int[]{22, 10, 2};
-    public HyperNEATSpace space = new HyperNEATSpace(dim);
+    public HyperSpace space = new HyperSpace(dim);
     public AtomicInteger leftToEnqueue = new AtomicInteger(0);
     public AtomicInteger leftExecuting = new AtomicInteger(0);
     public boolean running = false;
@@ -114,7 +115,7 @@ public class PongNeatController implements BaseController {
 
     @Override
     public void initialize() {
-        factory = new PongControllerFactoryCompetitive();
+        factory = new PongControllerFactorySimpleHyper();
     }
 
     public void reset() {
@@ -225,7 +226,7 @@ public class PongNeatController implements BaseController {
         GenomeMaker hyperNeatMaker = () -> {
             ArrayList<Genome> genomes = new ArrayList<>();
             dim = new int[]{dim[0], dim[1], fLayers};
-            space = new HyperNEATSpace(dim);
+            space = new HyperSpace(dim);
             for (int i = 0; i < generationSize; i++) {
                 HyperGenome genome = new HyperGenome(dim);
                 genome.space = space;
@@ -237,7 +238,7 @@ public class PongNeatController implements BaseController {
         Log.print("Generation size:" + generationSize);
         GenomeMaker neatMaker = () -> {
             ArrayList<Genome> genomes = new ArrayList<>();
-            for (int i = 0; i < generationSize / 2; i++) {
+            for (int i = 0; i < generationSize; i++) {
                 Genome g = this.factory.produceBaseGenome();
                 genomes.add(g);
                 Log.print("Add genome " + i);
@@ -247,9 +248,10 @@ public class PongNeatController implements BaseController {
 
         DefaultGenomeBreeder breeder = new DefaultGenomeBreeder();
 
-        DefaultNEATMutator mutator = new DefaultNEATMutator();
-        mutator.MUT_LINK = 0.8;
-        mutator.MUT_NODE = 0.5;
+        DefaultHyperNEATMutator mutator = new DefaultHyperNEATMutator();
+        DefaultNEATMutator neatMut = (DefaultNEATMutator) mutator.neatMutator;
+        neatMut.MUT_LINK = 0.8;
+        neatMut.MUT_NODE = 0.3;
         DefaultGenomeSimilarityEvaluator sim = new DefaultGenomeSimilarityEvaluator();
         DefaultGenomeSorter sorter = new DefaultGenomeSorter();
         DisposableExecutor determ = new DisposableExecutor(1);
@@ -269,11 +271,7 @@ public class PongNeatController implements BaseController {
 
             @Override
             public GenomeMaker getGenomeMaker() {
-                if (useHyperNEAT.isSelected()) {
-                    return hyperNeatMaker;
-                } else {
-                    return neatMaker;
-                }
+                return neatMaker;
             }
 
             @Override
@@ -315,9 +313,10 @@ public class PongNeatController implements BaseController {
         };
 
         Pool p1 = new NeatPool(conf);
-        Pool p2 = new NeatPool(conf);
-        pool = new MultiPool(p1, p2);
-//        pool = p1;
+//        Pool p2 = new NeatPool(conf);
+//        pool = new MultiPool(p1, p2);
+
+        pool = p1;
         this.exe.setRunnerSize(4);
 //        pool = new Pool(22*10, 4, Integer.parseInt(populationText.getText()));
 

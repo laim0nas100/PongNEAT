@@ -5,20 +5,25 @@
  */
 package lt.lb.pongneat;
 
-import lt.lb.pongneat.controllers.PongControllerBase;
-import lt.lb.pongneat.controllers.PongControllerSimple;
 import java.util.ArrayList;
 import java.util.List;
 import lt.lb.commons.Containers.Value;
 import lt.lb.commons.Threads.Promise;
 import lt.lb.commons.UUIDgenerator;
 import lt.lb.neurevol.Evoliution.NEAT.Genome;
+import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.*;
 import lt.lb.neurevol.Evoliution.NEAT.interfaces.Pool;
+import lt.lb.pongneat.controllers.*;
 import lt.lb.pongneat.pong.*;
 
-public class PongControllerFactorySimple extends PongControllerFactory {
+public class PongControllerFactorySimpleHyper extends PongControllerFactory {
 
-    PongControllerFactorySimple() {
+    SubstrateProducer1 prod = new SubstrateProducer1();
+    Substrate subs = prod.getSubstrate();
+    SubstrateToNNInfoProducer nnInfoProd = prod.getSubstrateToNNInfoProducer();
+    ConnectionProducer conProd = prod.getConnectionProducer();
+
+    PongControllerFactorySimpleHyper() {
         ballCount = 2;
 
     }
@@ -35,7 +40,8 @@ public class PongControllerFactorySimple extends PongControllerFactory {
 
     @Override
     public Genome produceBaseGenome() {
-        return new Genome(this.getInputCount(), this.getOutputCount());
+        return new HGenome(4, this.getOutputCount(),
+                           subs, nnInfoProd, conProd);
     }
 
     @Override
@@ -50,13 +56,17 @@ public class PongControllerFactorySimple extends PongControllerFactory {
     }
 
     public PongControllerBase makeController(Genome g) {
-        PongControllerSimple s = new PongControllerSimple();
-        s.game = this.makeGame();
-        s.genome = g;
-        return s;
+        if (g instanceof HGenome) {
+            PongControllerHyperSimple s = new PongControllerHyperSimple();
+            s.game = this.makeGame();
+            s.genome = (HGenome) g;
+            return s;
+        }
+        throw new RuntimeException("Unsupported genome");
 
     }
 
+    @Override
     public Promise makeRunnable(PongControllerBase contr, Value<Integer> sleep) {
         return new Promise(() -> {
             contr.start();

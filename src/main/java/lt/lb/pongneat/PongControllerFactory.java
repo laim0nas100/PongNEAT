@@ -5,6 +5,7 @@
  */
 package lt.lb.pongneat;
 
+import lt.lb.pongneat.controllers.PongControllerBase;
 import java.util.HashMap;
 import java.util.List;
 import lt.lb.commons.Containers.BasicProperty;

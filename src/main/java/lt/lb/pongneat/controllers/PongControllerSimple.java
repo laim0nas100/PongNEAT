@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.lb.pongneat;
+package lt.lb.pongneat.controllers;
 
 import java.util.*;
 import lt.lb.commons.Log;
