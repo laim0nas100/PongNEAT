@@ -21,6 +21,8 @@ public abstract class PongControllerBase {
 
     long frame = 0;
 
+    public boolean print;
+
     public int totalScore;
 
     public static Map<String, PongFitnessBase> fitnessMap = new ConcurrentHashMap<>();

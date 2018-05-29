@@ -109,13 +109,13 @@ public class PongNeatController implements BaseController {
 
     public PongControllerFactory factory;
 
-    public PongControllerFactorySimple simpleFac = new PongControllerFactorySimple();
+    public PongControllerFactorySimpleHyper simpleFac = new PongControllerFactorySimpleHyper();
 
     public DelayedLog dlog = new DelayedLog();
 
     @Override
     public void initialize() {
-        factory = new PongControllerFactorySimpleHyper();
+        factory = new PongControllerFactorySimple();
     }
 
     public void reset() {
@@ -373,15 +373,17 @@ public class PongNeatController implements BaseController {
             while (this.leftToEnqueue.decrementAndGet() > 0) {
                 List<PongControllerBase> neat = neat();
                 learn(neat);
-                List<PongControllerBase> externalCheck = this.externalMakeControllers(neat);
-                this.externalTests(externalCheck);
-                this.externalLearn(externalCheck);
+//                List<PongControllerBase> externalCheck = this.externalMakeControllers(neat);
+//                this.externalTests(externalCheck);
+//                this.externalLearn(externalCheck);
+                this.externalLearn(neat);
 
                 this.dlog.log(logFile, this.pool.getGeneration() + ";" + this.averageScore + ";" + this.averageExternalScore + ";"
                               + this.generationBest.totalScore + ";" + this.bestCt.totalScore + ";"
                               + this.bestExternal.totalScore);
 
                 update();
+                System.gc();
             }
         });
 
@@ -511,6 +513,7 @@ public class PongNeatController implements BaseController {
 //            }
 
             PongControllerBase remade = factory.remakeController(bestCt);
+            remade.print = true;
             remade.game.setVisible(true);
             factory.makeRunnable(remade, new Value(20)).run();
 

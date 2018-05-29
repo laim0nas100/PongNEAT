@@ -9,6 +9,7 @@ import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.SubstrateLayer.SLayerType;
 import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.*;
 import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.imp.HyperSpaceToSubstrateLayerTransformerImpl;
 import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.imp.SubstrateToNNInfoProducerImpl;
+import lt.lb.neurevol.Misc.Interval;
 import lt.lb.neurevol.Neural.NeuronInfo;
 import lt.lb.neurevol.Neural.Synapse;
 import lt.lb.pongneat.pong.Pong;
@@ -25,7 +26,8 @@ public class SubstrateProducer1 {
     public static String OUTPUT = "output";
 
     public SubstrateToNNInfoProducer getSubstrateToNNInfoProducer() {
-        SubstrateToNNInfoProducer prod = new SubstrateToNNInfoProducerImpl();
+        SubstrateToNNInfoProducerImpl prod = new SubstrateToNNInfoProducerImpl();
+        prod.normalizationRange = new Interval(0, 1);
         return prod;
     }
 
@@ -79,7 +81,7 @@ public class SubstrateProducer1 {
             }
             double w = weights[use];
 
-            if (Math.abs(w) > 0.2) {
+            if (Math.abs(w) > 0.3) {
                 return new Synapse(hIn.id, hTo.id, w);
             }
             return null;

@@ -10,13 +10,13 @@ import lt.lb.commons.Log;
 import lt.lb.neurevol.Evoliution.NEAT.Genome;
 import lt.lb.neurevol.Misc.Pair;
 import lt.lb.neurevol.Neural.NeuralNetwork;
+import lt.lb.neurevol.Neural.Neuron;
 import lt.lb.pongneat.fitness.PongFitnessByScore;
 import lt.lb.pongneat.pong.*;
 
 public class PongControllerSimple extends PongControllerBase {
 
     public Genome genome;
-    public boolean print;
 
     public NeuralNetwork net;
 
@@ -81,8 +81,18 @@ public class PongControllerSimple extends PongControllerBase {
             i += 2;
         }
 
-        Double[] g1Eval = net.evaluate(ap);
+        Map<Integer, Double> inputMap = new HashMap<>();
+        for (int j = 0; j < ap.length; j++) {
+            inputMap.put(j, ap[j]);
+        }
 
+        Map<Integer, Neuron> evaluateByMap = net.evaluateByMap(inputMap);
+        Double[] g1Eval = new Double[evaluateByMap.size()];
+        for (Neuron n : evaluateByMap.values()) {
+            g1Eval[n.ID - net.inputs] = n.value;
+        }
+
+//        Double[] g1Eval = net.evaluate(ap);
         PongMove moveA = this.decideMove(g1Eval);
         if (moveA == PongMove.UP) {
             this.getEngine().moveA(-10);

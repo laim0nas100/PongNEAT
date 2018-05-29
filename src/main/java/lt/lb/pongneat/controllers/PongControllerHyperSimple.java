@@ -6,6 +6,7 @@
 package lt.lb.pongneat.controllers;
 
 import java.util.*;
+import lt.lb.commons.Log;
 import lt.lb.neurevol.Evoliution.NEAT.Genome;
 import lt.lb.neurevol.Evoliution.NEAT.HyperNEAT.*;
 import lt.lb.neurevol.Misc.Pos;
@@ -17,7 +18,6 @@ import lt.lb.pongneat.pong.*;
 public class PongControllerHyperSimple extends PongControllerBase {
 
     public HGenome genome;
-    public boolean print;
 
     public NeuralNetwork net;
 
@@ -86,7 +86,7 @@ public class PongControllerHyperSimple extends PongControllerBase {
         SubstrateNeuronLayer ballsLayer = (SubstrateNeuronLayer) this.genome.subs.layers.get(SubstrateProducer1.BALLS);
 
         for (Ball ball : this.getEngine().balls) {
-            Pos p = new Pos((ball.x / 10), (ball.y / 10));
+            Pos p = new Pos(Math.round(ball.x / 10), Math.round(ball.y / 10));
             HyperNeuron n = ballsLayer.getClosestNeuronByPosisition(p);
             inputMap.put(n.id, 1d);
         }
@@ -94,9 +94,8 @@ public class PongControllerHyperSimple extends PongControllerBase {
         Map<Integer, Neuron> g1Eval = net.evaluateByMap(inputMap);
 
         Double[] eval = new Double[g1Eval.size()];
-        int i = 0;
         for (Neuron d : g1Eval.values()) {
-            eval[i++] = d.value;
+            eval[d.ID - net.inputs] = d.value;
         }
 
         PongMove moveA = this.decideMove(eval);
@@ -105,6 +104,25 @@ public class PongControllerHyperSimple extends PongControllerBase {
 
         } else if (moveA == PongMove.DOWN) {
             this.getEngine().moveA(10);
+        }
+
+        if (print) {
+            Log.print(inputMap.toString() + "  ->  " + Arrays.toString(eval));
+//            if (!dumped) {
+//                dumped = true;
+//
+//                Log.print("Dump start");
+//
+//                NNInfo info = genome.cachedNNInfo;
+//                for (Synapse s : info.links) {
+//                    Log.print(s);
+//                }
+////                for (Neuron n : net.neurons.values()) {
+////                    Log.print(n.input.keySet() + " " + n.ID + "->" + n.value);
+////                }
+//                Log.print("Dump end");
+//            }
+
         }
 
         //my Y
@@ -117,6 +135,8 @@ public class PongControllerHyperSimple extends PongControllerBase {
         //ball n x
         //moves nothing, left, right
     }
+
+    public boolean dumped = false;
 
     @Override
     protected PongMove decideMove(Double[] eval) {

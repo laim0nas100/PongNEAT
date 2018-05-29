@@ -55,6 +55,7 @@ public class Pong extends JFrame {
         p.gameEngine = new PongEngine();
         p.setTitle("Pong");
         p.setLocationRelativeTo(null);
+        p.setLocation(0, 0);
 //        p.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         p.setResizable(false);
